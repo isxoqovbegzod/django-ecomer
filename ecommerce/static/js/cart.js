@@ -15,6 +15,12 @@ for (i = 0; i < updateBtns.length; i++) {
     })
 }
 
+
+
+
+
+
+
 function updateUserOrder(productId, action) {
     console.log('User is logged in, sending data...')
 
