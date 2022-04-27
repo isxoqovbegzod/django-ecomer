@@ -135,3 +135,7 @@ def processOrder(request):
     else:
         print("User not is logged in .....")
     return JsonResponse('Payment complate!', safe=False)
+
+def handler404(request, exception):
+    context = {}
+    return render(request, 'store/error404.html', context)
