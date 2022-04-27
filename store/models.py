@@ -46,8 +46,12 @@ class Order(models.Model):
 
     @property
     def shipping(self):
-        shipping = False  #yetkazip berish
-
+        shipping = False  # yetkazip berish
+        orderitems = self.orderitem_set.all()
+        for i in orderitems:
+            if i.product.digital == False:
+                shipping = True
+        return shipping
 
     @property
     def get_cart_total(self):
