@@ -46,7 +46,7 @@ class Order(models.Model):
 
     @property
     def shipping(self):
-        shipping = False  #yetkazip berishs
+        shipping = False  #yetkazip berish
 
 
     @property
