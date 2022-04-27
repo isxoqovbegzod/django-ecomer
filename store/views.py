@@ -4,10 +4,21 @@ from django.shortcuts import render
 from django.http import JsonResponse
 import json
 
+
 # Create your views here.
 def store(request):
+    if request.user.is_authenticated:
+        customer = request.user.customer
+        order, created = models.Order.objects.get_or_create(customer=customer, complate=False)
+        items = order.orderitem_set.all()
+        cartItems = order.get_cart_item
+    else:
+        items = []
+        order = {'get_cart_total': 0, 'get_cart_item': 0}
+        cartItems = order['get_cart_item']
+
     items = models.Product.objects.all()
-    context = {'items': items}
+    context = {'items': items, 'cartItems': cartItems}
     return render(request, 'store/store.html', context)
 
 
@@ -17,10 +28,13 @@ def cart(request):
         customer = request.user.customer
         order, created = models.Order.objects.get_or_create(customer=customer, complate=False)
         items = order.orderitem_set.all()
+        cartItems = order.get_cart_item
     else:
         items = []
         order = {'get_cart_total': 0, 'get_cart_item': 0}
-    context = {'items': items, 'order': order}
+        cartItems = order['get_cart_item']
+
+    context = {'items': items, 'order': order, 'cartItems': cartItems}
     return render(request, 'store/cart.html', context)
 
 
@@ -45,36 +59,17 @@ def updateItem(request):
 
     customer = request.user.customer
     product = models.Product.objects.get(id=productId)
-    print(product)
     order, created = models.Order.objects.get_or_create(customer=customer, complate=False)
     orderItem, created = models.OrderItem.objects.get_or_create(order=order, product=product)
-    print(order, 'order _________________________')
-    print(orderItem, 'orderItem__________________')
 
     if action == 'add':
         orderItem.qunatity = (orderItem.qunatity + 1)
+        print("adddddddddddddddddd")
     elif action == 'remove':
-        orderItem.qunatity = (orderItem.qunatity -1)
+        orderItem.qunatity = (orderItem.qunatity - 1)
+    orderItem.save()
+
+    if orderItem.qunatity <= 0:
+        orderItem.delete()
 
     return JsonResponse('item was added', safe=False)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
