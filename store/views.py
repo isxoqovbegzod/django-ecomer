@@ -21,7 +21,8 @@ def store(request):
         cartItems = order['get_cart_item']
 
     items = models.Product.objects.all()
-    context = {'items': items, 'cartItems': cartItems, 'shipping': False}
+    json = models.Order.objects.all()
+    context = {'items': items, 'cartItems': cartItems, 'shipping': False, "json":json}
     return render(request, 'store/store.html', context)
 
 
@@ -139,3 +140,5 @@ def processOrder(request):
 def handler404(request, exception):
     context = {}
     return render(request, 'store/error404.html', context)
+
+
